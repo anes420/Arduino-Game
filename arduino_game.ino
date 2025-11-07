@@ -1,4 +1,4 @@
-// Code written by anesss
+// Code written by aness
 
 int A = 12;
 int B = 2;
@@ -275,3 +275,4 @@ void prikazi9() {
   digitalWrite(F, HIGH);
   digitalWrite(G, HIGH);
 }
+
