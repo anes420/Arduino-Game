@@ -23,10 +23,12 @@ int stanjeZelena=0;
 
 int i=-1;
 int i2=0;
+int iMaster=0;
 
 int pomocna=0;
 int pomocna1=0;
-int pomocna2=0;
+int pomocnaMaster=0;
+
 
 
 void setup() {
@@ -55,44 +57,27 @@ void loop() {
   coinInsert=digitalRead(coin);
   ocitanjeMaster=digitalRead(master);
 
-// MASTER
-  if(ocitanjeMaster==0) {
-    delay(50);
-    while(i2<=2) {
-      digitalWrite(plava, HIGH);
-      delay(200);
-      digitalWrite(plava, LOW);
-      delay(200);
-      i2++;
-    }
-    if(i2==3) {
-      digitalWrite(zelena, HIGH);
-      stanjeZelena=1;
-      pomocna2=1;
-      i2=0;
-    }
-  if(ocitanjeMaster==0 && pomocna2==1)
-    if(ocitanjeMaster==0 && pomocna2==1) {
-      while(i2<=2) {
-        digitalWrite(plava, HIGH);
-        delay(200);
-        digitalWrite(plava, LOW);
-        delay(200);
-        i2++;
-        }
-        if(i2>=3) {
-          digitalWrite(zelena, LOW);
-          stanjeZelena=0;
-          pomocna2=0;
-        }
-    }
+// // MASTER
+//   if(ocitanjeMaster==0 && pomocnaMaster==0) {
+//     for(i2 = 0; i2 <= 3; i++){
+//       digitalWrite(plava, HIGH);
+//       delay(200);
+//       digitalWrite(plava, LOW);
+//       delay(200);
+//     }
+//     if (i2==3) {
+//       stanjeZelena=1;
+//       digitalWrite(zelena, HIGH);
+//     }
+//     pomocnaMaster=1;
+//   }
+//   if(ocitanjeMaster==1 && pomocnaMaster==1) {
+//     pomocnaMaster=0;
+//   }
+//   //KRAJ MASTERA
 
 
-  }
-  //KRAJ MASTERA
-
-
-  if(coinInsert==0 && pomocna1==0 && stanjeZelena==1) {
+  if(coinInsert==0 && pomocna1==0) {
     i=5;
     pomocna1=1;
   }
@@ -103,7 +88,7 @@ void loop() {
   }
 
 
-    if(ocitanjePB==0 && pomocna==0 && stanjeZelena==1) {
+    if(ocitanjePB==0 && pomocna==0) {
       i--;
       pomocna=1;
       tone(zvucnik, 420);
@@ -275,5 +260,3 @@ void prikazi9() {
   digitalWrite(F, HIGH);
   digitalWrite(G, HIGH);
 }
-
-
