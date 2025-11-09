@@ -8,13 +8,13 @@ int E = 5;
 int F = 6;
 int G = 7;
 
-int zelena=13;
-int plava=1;
+int greenLED=13;
+int blueLED=1;
 
 int zvucnik = 8;
 int coin = 9;
 int zica = 10;
-int master = 11;
+int button = 11;
 
 int ocitanjePB;
 int coinInsert;
@@ -29,6 +29,11 @@ int pomocna=0;
 int pomocna1=0;
 int pomocnaMaster=0;
 
+bool state = false; // false = green OFF, true = green ON
+bool lastButton = LOW;
+unsigned long lastDebounceTime = 0;
+const unsigned long debounceDelay = 50;
+
 
 
 void setup() {
@@ -42,12 +47,12 @@ void setup() {
   pinMode(zvucnik, OUTPUT);
   pinMode(zica, INPUT_PULLUP);
   pinMode(coin, INPUT_PULLUP);
-  pinMode(master, INPUT_PULLUP);
+  pinMode(button, INPUT_PULLUP);
 
-  pinMode(zelena, OUTPUT);
-  pinMode(plava, OUTPUT);
+  pinMode(greenLED, OUTPUT);
+  pinMode(blueLED, OUTPUT);
 
-  digitalWrite(zelena, LOW);
+  digitalWrite(greenLED, LOW);
 }
 
 
@@ -55,73 +60,80 @@ void loop() {
 
   ocitanjePB=digitalRead(zica);
   coinInsert=digitalRead(coin);
-  ocitanjeMaster=digitalRead(master);
 
-// // MASTER
-//   if(ocitanjeMaster==0 && pomocnaMaster==0) {
-//     for(i2 = 0; i2 <= 3; i++){
-//       digitalWrite(plava, HIGH);
-//       delay(200);
-//       digitalWrite(plava, LOW);
-//       delay(200);
-//     }
-//     if (i2==3) {
-//       stanjeZelena=1;
-//       digitalWrite(zelena, HIGH);
-//     }
-//     pomocnaMaster=1;
-//   }
-//   if(ocitanjeMaster==1 && pomocnaMaster==1) {
-//     pomocnaMaster=0;
-//   }
-//   //KRAJ MASTERA
+// // MASTER gpt
+   bool reading = !digitalRead(button); // button pressed = HIGH (since using pull-up)
+
+  if (reading != lastButton) {
+    lastDebounceTime = millis();
+  }
+
+  // simple debounce
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (reading) { // button is held
+      blinkBlue(3);          // blink 3 times before toggle
+      state = !state;        // toggle state
+      digitalWrite(greenLED, state ? HIGH : LOW);
+      while (digitalRead(button) == LOW) {
+        // wait for release
+      }
+      delay(20); // small delay after release
+    }
+  }
+
+  lastButton = reading;
 
 
-  if(coinInsert==0 && pomocna1==0) {
+
+  if(coinInsert==0 && pomocna1==0 && state==1) {
     i=5;
     pomocna1=1;
   }
 
-  if(coinInsert==1 && pomocna1==1) {
+  if(coinInsert==1 && pomocna1==1 && state==1) {
     pomocna1=0;
     delay(20);
   }
 
 
-    if(ocitanjePB==0 && pomocna==0) {
+    if(ocitanjePB==0 && pomocna==0 && state==1 && i>=0) {
       i--;
       pomocna=1;
       tone(zvucnik, 420);
       }
 
-    if(ocitanjePB==1 && pomocna==1) {
+    if(ocitanjePB==1 && pomocna==1 && state==1) {
       pomocna=0;
       noTone(zvucnik);
       }
 
-    if(i==5) {
+
+    if(state==0) {
+      none();
+    }  
+    if(i==5 && state==1) {
       prikazi5();
     }
 
-    else if(i==4) {
+    else if(i==4 && state==1) {
       prikazi4();
     }
 
-    else if(i==3) {
+    else if(i==3 && state==1) {
       prikazi3();
     }
 
-    else if(i==2) {
+    else if(i==2 && state==1) {
       prikazi2();
     }
 
-    else if(i==1) {
+    else if(i==1 && state==1) {
       prikazi1();
     }
 
     // a f g c d e g b
 
-    else if (i==0) {
+    else if(i==0 || state==1){
       digitalWrite(A, HIGH);
       delay(100);
       digitalWrite(A, LOW);
@@ -160,6 +172,24 @@ void loop() {
   
 }
 
+void blinkBlue(int times) {
+  for (int i = 0; i < times; i++) {
+    delay(200);
+    digitalWrite(blueLED, HIGH);
+    delay(200);
+    digitalWrite(blueLED, LOW);
+  }
+}
+
+void none() {
+  digitalWrite(A,LOW);
+  digitalWrite(B,LOW);
+  digitalWrite(C,LOW);
+  digitalWrite(D,LOW);
+  digitalWrite(E,LOW);
+  digitalWrite(F,LOW);
+  digitalWrite(G,LOW);
+}
 
 void prikazi0() {
   digitalWrite(A, HIGH);
