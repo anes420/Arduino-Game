@@ -21,7 +21,7 @@ int coinInsert;
 int ocitanjeMaster;
 int stanjeZelena=0;
 
-int i=-1;
+int i=0;
 int i2=0;
 int iMaster=0;
 
@@ -96,7 +96,7 @@ void loop() {
   }
 
 
-    if(ocitanjePB==0 && pomocna==0 && state==1 && i>=0) {
+    if(ocitanjePB==0 && pomocna==0 && state==1 && i>0) {
       i--;
       pomocna=1;
       tone(zvucnik, 420);
@@ -133,7 +133,7 @@ void loop() {
 
     // a f g c d e g b
 
-    else if(i==0 || state==1){
+    else if(i==0 && state==1){
       digitalWrite(A, HIGH);
       delay(100);
       digitalWrite(A, LOW);
