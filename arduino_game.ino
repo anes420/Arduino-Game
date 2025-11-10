@@ -110,6 +110,7 @@ void loop() {
 
     if(state==0) {
       none();
+      i=0;
     }  
     if(i==5 && state==1) {
       prikazi5();
@@ -290,3 +291,4 @@ void prikazi9() {
   digitalWrite(F, HIGH);
   digitalWrite(G, HIGH);
 }
+
